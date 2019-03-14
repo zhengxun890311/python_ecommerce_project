@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <script type="text/javascript" src="../static/js/jquery.js"></script>
+    <title>Admin Login</title>
+</head>
+    <body>
+        <script>
+            $(document).ready(function(){
+                $("#cancelBtn").click(function(){
+                    $("#email").val("");
+                    $("#password").val("");
+                })
+            })
+        </script>
+        <div id="container">
+            <fieldset id="createAcct_field">
+            <form action="/admin_login" method="POST">
+                {% csrf_token%}
+                    <p><h1>Login</h2></p>
+                    <p>Email:
+                    <p><input type="email" class="form-control" name="email" id="email" placeholder="please input email address"></p>
+                    <p>password:</p>
+                    <p><input type="password" class="form-control" name="password" id="password"></p>
+                    <button id="login" type="submit" class="btn btn-large btn-primary" value="Login">Login</button>
+                    <button id="cancelBtn" type="button" class="btn btn-warning" value="Cancel">Cancel</button>
+                    <p></p>
+                </fieldset>
+            </form>
+        </div>
+    </body>
+</html>

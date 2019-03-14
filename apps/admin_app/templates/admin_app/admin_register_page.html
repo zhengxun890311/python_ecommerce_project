@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <script type="text/javascript" src="../static/js/jquery.js"></script>
+    <title>Document</title>
+    <style>
+        .color{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        $(document).ready(function(){
+            $("#plus_icon").click(function(){
+                $("#input_text").toggle(1000);
+            });
+            $("#admin_main_page").click(function(){
+                window.location.href="/admin_first_page";
+            });
+        });
+    </script>
+    <div>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }} color"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <a href="#"><img id="plus_icon" src="../static/image/icon/plus_icon.png" width="20px"></a>
+        <div id="input_text">
+            <form action="/admin_register" method="POST">
+                {% csrf_token%}
+                    <p><h1>Create Admin Account</h2></p>
+                    <p>First name:</p>
+                    <p><input type="text" class="form-control" name="first_name" id="first_name" placeholder="please input first name"></p>
+                    <p>Last name:</p>
+                    <p><input type="text" class="form-control" name="last_name" id="last_name" placeholder="please input last name"></p>
+                    <p>Email:
+                    <p><input type="email" class="form-control" name="email" id="email" placeholder="please input email address"></p>
+                    <p>authority:</p>
+                    <p>
+                        <select class="form-control" name="authority" id="authority">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                        </select>
+                    </p>
+                    <p>password:</p>
+                    <p><input type="password" class="form-control" name="password1" id="password1" placeholder="At least 8 characters" ></p>
+                    <p>Re-enter password:</p>
+                    <p><input type="password" class="form-control" name="password2" id="password2" placeholder=""></p>
+                    <button id="registerBtn" type="submit" class="btn btn-large btn-primary" value="Regiser">Regiser</button>
+                    <button id="cancelBtn" type="button" class="btn btn-warning" value="Cancel">Cancel</button>
+                    <button type="button" id="admin_main_page" class="btn btn-info">Go to admin main page</button>
+                    <p></p>
+                </fieldset>
+            </form>
+        </div>
+        <br><br>
+        <table border="1">
+            <tr>
+                <th></th>
+                <th>Admin id</th>
+                <th>Admin first name</th>
+                <th>Admin last name</th>
+                <th>Admin email</th>
+                <th>Admin password</th>
+                <th>Admin authority</th>
+                <th>Admin create date</th>
+                <th>Action</th>
+            </tr>
+            {%for admin in admin_info%}
+            <tr>
+                <td><input type="checkbox" name="ids"></td>
+                <td>{{admin.id}}</td>
+                <td>{{admin.admin_first_name}}</td>
+                <td>{{admin.admin_last_name}}</td>
+                <td>{{admin.admin_email}}</td>
+                <td>{{admin.admin_password}}"</td>
+                <td>{{admin.admin_authority}}"</td>
+                <td>{{admin.admin_create_at}}"</td>
+                <td>
+                    <a href="#">Edit</a>
+                    <a href="/delete_admin/{{admin.id}}">Delete</a>
+                </td>
+            </tr>
+            {%endfor%}
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <script type="text/javascript" src="../static/js/jquery.js"></script>
+    <title>Registration</title>
+</head>
+<body>
+    <script>
+        $(document).ready(function(){
+            $("#registerBtn").click(function(){
+                $.ajax({
+                    url:"/admin_register",
+                    type: "POST",
+                    dataType:"json",
+                    data:{
+                        "first_name":$("#first_name").val(),
+                        "last_name":$("#last_name").val(),
+                        "email":$("#email").val(),
+                        "authority":$("#authority").val(),
+                        "password":$("#password2").val(),
+                        "csrfmiddlewaretoken": $('input[type=hidden]').val()
+                    },
+                    success:function(data){
+                        $("#first_name").val("");
+                        $("#last_name").val("");
+                        $("#email").val("");
+                        $("#password1").val("");
+                        $("#password2").val("");
+                        document.location.reload();
+                    }
+                });
+            });
+            $("#cancelBtn").click(function(){
+                $("#first_name").val("");
+                $("#last_name").val("");
+                $("#email").val("");
+                $("#password1").val("");
+                $("#password2").val("");
+            });
+        })
+    </script>
+    <div id="container">
+        <a href="/"><img id="logo" src="../static/image/Logo.PNG"></a>
+        <form id="admin_register_form" action="/register" method="POST">
+            {% csrf_token%}
+            <fieldset id="createAcct_field">
+                <p><h2>Create Account</h2></p>
+                <p>First name:</p>
+                <p><input type="text" class="form-control" name="first_name" id="first_name" placeholder="please input first name"></p>
+                <p>Last name:</p>
+                <p><input type="text" class="form-control" name="last_name" id="last_name" placeholder="please input last name"></p>
+                <p>Email:
+                <p><input type="email" class="form-control" name="email" id="email" placeholder="please input email address"></p>
+                <p>password:</p>
+                <p><input type="password" class="form-control" name="password1" id="password1" placeholder="At least 6 characters" ></p>
+                <p>Re-enter password:</p>
+                <p><input type="password" class="form-control" name="password2" id="password2" placeholder=""></p>
+                <button id="registerBtn" type="submit" class="btn btn-success" value="Regiser">Regiser</button>
+                <button id="cancelBtn" type="button" class="btn btn-success" value="Cancel">Cancel</button>
+                <p></p>
+                <p>Already have an account? <a href="#">Sign in</a></p>
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>

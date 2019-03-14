@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <script type="text/javascript" src="../static/js/jquery.js"></script>
+    <title>Document</title>
+    <style>
+        .color{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        $(document).ready(function(){
+            $("#input_text").hide();
+            $("#cancelBtn").click(function(){
+                $("#product_name").val("");
+                $("#product_desc").val("");
+                $("#product_price").val("");
+                $("#product_inventory").val("");
+            });
+            $("#plus_icon").click(function(){
+                $("#input_text").toggle(1000);
+            });
+            $("#admin_main_page").click(function(){
+                window.location.href="/admin_first_page";
+            });
+            $("#upper_category").change(function(){
+                $.ajax({
+                    type:"GET",
+                    url:"/get_lower_category",
+                    dataType:"json",
+                    data:{
+                        "upper_category":$("#upper_category").val()
+                    },
+                    success:function(data){
+                        var content='';
+                        $.each(data,function(i,item){
+                            content+='<option value='+item.lower_name+'>'+item.lower_name+'</option>'
+                        })
+                        $("#lower_category").html(content);
+                    }
+                });
+
+            });
+        });
+    </script>
+    <div>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }} color"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <a href="#"><img id="plus_icon" src="../static/image/icon/plus_icon.png" width="20px"></a>
+        <h2>Create New Product</h2>
+        <div id="input_text">
+            <form action="/createNewProduct" method="POST">
+                {% csrf_token%}
+                <p>upper category:
+                    <select name="upper_category" id="upper_category">
+                        {% for upper in upper_category %}
+                        <option>{{upper.upper_name}}</option>
+                        {% endfor%}
+                    </select>
+                </p>
+                <p>
+                    lower category:
+                    <select name="lower_category" id="lower_category">
+                    </select>
+                </p>
+                <p>product name:<p><input type="text" class=".input-medium" name="product_name" id="product_name" placeholder="please input product name"></p></p>
+                <p>product desc:<p><input type="text" class=".input-medium" name="product_desc" id="product_desc" placeholder="please input product desc"></p></p>
+                <p>product gender:
+                    <select class =".input-medium" name="product_gender" size="2" multiple="multiple">
+                        <option selected>M</option>
+                        <option>F</option>
+                    </select>
+                </p>
+                <p>product price:<p><input type="text" class=".input-medium" name="product_price" id="product_price" placeholder="please input product price"></p></p>
+                <p>product inventory:<p><input type="number" class=".input-medium" name="product_inventory" id="product_inventory" placeholder="please input product inventory number"></p></p>
+                <p>product path:<p><input type="text" class=".input-medium" name="product_path" id="product_path" value="../static/image/Accessory/Socks/ACC1.jpg"></p></p>
+                <input class="btn btn-large btn-primary" type="submit" value="submit">
+                <button id="cancelBtn" type="button" class="btn btn-warning" value="Cancel">Cancel</button>
+                <button type="button" id="admin_main_page" class="btn btn-info">Go to admin main page</button>
+            </form>
+        </div>
+        <br><br>
+        <table border="1">
+            <tr>
+                <th></th>
+                <th>Product id</th>
+                <th>Product picture</th>
+                <th>Product name</th>
+                <th>Product desc</th>
+                <th>Product gender</th>
+                <th>Product price</th>
+                <th>Product inventory</th>
+                <th>Product path</th>
+                <th>Action</th>
+            </tr>
+            {%for product in product_info%}
+            <tr>
+                <td><input type="checkbox" name="ids"></td>
+                <td>{{product.id}}</td>
+                <td><img class=".product_pic" src="{{product.product_path}}" width="100px"></td>
+                <td>{{product.product_name}}</td>
+                <td>{{product.product_desc}}</td>
+                <td>{{product.product_gender}}</td>
+                <td>{{product.product_price}}"</td>
+                <td>{{product.product_inventory}}"</td>
+                <td>{{product.product_path}}"</td>
+                <td>
+                    <a href="/show_product/{{product.id}}">Edit</a>
+                    <a href="/delete_Product/{{product.id}}">Delete</a>
+                </td>
+            </tr>
+            {%endfor%}
+        </table>
+        <div class="pagination">
+            <span class="step-links">
+                {% if product_info.has_previous %}
+                    <a href="?page={{ product_info.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="current">
+                    Page {{ product_info.number }} of {{ product_info.paginator.num_pages }}.
+                </span>
+        
+                {% if product_info.has_next %}
+                    <a href="?page={{ product_info.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</body>
+</html>
